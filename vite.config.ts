@@ -7,5 +7,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './setupTests.js',
+    coverage: {
+      reporter: ['text', 'html'],
+      exclude: ['**/tests/**', '**/__tests__/**'],
+    },
   },
 });
