@@ -1,13 +1,32 @@
 /* styles.css */
 
+:root {
+  --bg-color: #f9fafb;
+  --text-color: #222;
+  --cell-bg: white;
+  --inactive-cell-bg: #ccc;
+  --header-bg: #f0f0f0;
+  --victory-bg: #d4edda;
+  --victory-text: #155724;
+  --victory-shadow: rgba(0, 0, 0, 0.1);
+}
 body {
   font-family: system-ui, sans-serif;
-  background-color: #f9fafb;
-  color: #222;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   margin: 0;
   padding: 0;
 }
-
+body.dark {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --cell-bg: #1e1e1e;
+  --inactive-cell-bg: #333;
+  --header-bg: #2a2a2a;
+  --victory-bg: #243c2e;
+  --victory-text: #a9f0c7;
+  --victory-shadow: rgba(0, 0, 0, 0.4);
+}
 h1, h2, h3 {
   font-weight: 600;
 }
@@ -69,14 +88,15 @@ ol {
 }
 .victory-message {
   margin-top: 1rem;
-  padding: 1rem;
-  background-color: #d4edda;
-  color: #155724;
-  border-radius: 4px;
+  padding: 1.2rem;
+  background-color: var(--victory-bg);
+  color: var(--victory-text);
+  border-radius: 6px;
   font-weight: bold;
   text-align: center;
   animation: fadeZoomIn 0.5s ease-out;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px var(--victory-shadow);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 .grid-transition {
   opacity: 1;

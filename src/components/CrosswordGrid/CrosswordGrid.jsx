@@ -59,7 +59,7 @@ const CrosswordGrid = ({ words, gridSize, activeWordId, setActiveWordId }) => {
                 style={{
                   width: CELL_SIZE,
                   height: CELL_SIZE,
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'var(--header-bg)',
                   textAlign: 'center',
                   fontSize: '0.8rem',
                   border: '1px solid #ccc',

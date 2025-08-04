@@ -2,41 +2,56 @@ import { useEffect, useState } from 'react';
 import { fetchGrid } from './api/crossword';
 import { CrosswordGrid } from './components/CrosswordGrid';
 import CluesList from './components/CluesList';
+import { useTheme } from './context/ThemeContext';
 
-function App() {
+const App = () => {
+  const { darkMode, toggleTheme } = useTheme();
   const [gridId, setGridId] = useState(1);
   const [gridData, setGridData] = useState(null);
   const [activeWordId, setActiveWordId] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const handleNextGrid = () => {
-    setIsTransitioning(true); // déclenche fade-out
-
-    setTimeout(() => {
-      setGridId(prev => prev + 1); // change la grille après 500ms
-      setActiveWordId(null);
-      setIsTransitioning(false); // reset pour fade-in
-    }, 500); // doit correspondre à la durée CSS
-  };
 
   useEffect(() => {
-    setGridData(null); // pour déclencher l'état "Chargement..."
-    fetchGrid(gridId)
-      .then(res => setGridData(res.data))
-      .catch(err => console.error(err));
-  }, []);
+    setGridData(null); // clear current view while loading new one
+    fetchGrid(gridId).then(res => setGridData(res.data));
+  }, [gridId]);
+
+  const handleNextGrid = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      /*setGridId(prev => prev + 1);*/
+      setGridId(prev => prev);
+      setActiveWordId(null);
+      setIsTransitioning(false);
+    }, 500);
+  };
 
   return (
     <div className="container">
+      <button
+        onClick={toggleTheme}
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          padding: '0.5rem 1rem',
+          backgroundColor: darkMode ? '#444' : '#ddd',
+          color: darkMode ? '#eee' : '#222',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        {darkMode ? '☀️ Mode clair' : '🌙 Mode sombre'}
+      </button>
+
       <h1>🧩 Mots croisés interactifs</h1>
 
       {gridData ? (
         <>
           <h2>{gridData.title}</h2>
 
-          <div
-            className={`grid-transition ${isTransitioning ? 'fade-out' : ''}`}
-            style={{ transitionDelay: isTransitioning ? '0s' : '0.2s' }}
-          >
+          <div className={`grid-transition ${isTransitioning ? 'fade-out' : ''}`}>
             <CrosswordGrid
               words={gridData.words}
               gridSize={12}
@@ -47,8 +62,8 @@ function App() {
 
           <CluesList
             words={gridData.words}
-            setActiveWordId={setActiveWordId}
             activeWordId={activeWordId}
+            setActiveWordId={setActiveWordId}
           />
 
           <button
@@ -66,36 +81,12 @@ function App() {
           >
             Nouvelle grille
           </button>
-
-          <div className="clues-wrapper">
-            <div className="clues-section">
-              <h3>Mots horizontaux</h3>
-              <ol>
-                {gridData.words
-                  .filter(w => w.direction === 'across')
-                  .map((word, i) => (
-                    <li key={word.id}>{word.clue}</li>
-                  ))}
-              </ol>
-            </div>
-
-            <div className="clues-section">
-              <h3>Mots verticaux</h3>
-              <ol>
-                {gridData.words
-                  .filter(w => w.direction === 'down')
-                  .map((word, i) => (
-                    <li key={word.id}>{word.clue}</li>
-                  ))}
-              </ol>
-            </div>
-          </div>
         </>
       ) : (
         <p>Chargement...</p>
       )}
     </div>
   );
-}
+};
 
 export default App;
